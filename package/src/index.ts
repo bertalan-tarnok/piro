@@ -59,8 +59,10 @@ const scanFolder = (cfg: Config, folder: string, base: string) => {
 
     if (fs.statSync(path.join(cfg.src, cfg.pages, folder, f)).isDirectory()) {
       scanFolder(cfg, f, base);
-      return;
+      continue;
     }
+
+    if (f === '_base.html') continue;
 
     const dir = f.endsWith('index.html') ? '' : path.join(f.replace(/\.html$/, ''), '');
 

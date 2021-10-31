@@ -6,7 +6,7 @@ import { Config } from './config';
 export const parse = (cfg: Config, pathToPage: string) => {
   let page = fs.readFileSync(path.join(cfg.src, cfg.pages, pathToPage)).toString();
 
-  if (cfg.inject[pathToPage]) {
+  if (cfg.inject && cfg.inject[pathToPage]) {
     page = cfg.inject[pathToPage](page);
   }
 

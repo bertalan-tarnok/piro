@@ -9,6 +9,6 @@ export interface Config {
    * Inside `src`
    */
   pages: string;
-  inject: { [key: string]: (s: string) => string };
+  inject?: { [key: string]: (s: string) => string };
   esbuild?: BuildOptions;
 }

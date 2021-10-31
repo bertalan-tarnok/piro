@@ -1,10 +1,11 @@
 {
   "name": "bit-page",
   "version": "0.0.0",
-  "description": "",
+  "description": "A tool for building static sites",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc"
+    "dev": "tsc",
+    "prepublishOnly": "npm version patch"
   },
   "author": "Bertalan Tarnok",
   "license": "MIT",
