@@ -65,7 +65,6 @@ export const createPage = (cfg: Config, base: string, pathToPage: string) => {
   for (const h of bitHeads) {
     head = html.append(head, html.getInside(h) || '');
     base = base.replace(h, '');
-    console.log(h);
   }
 
   base = base.replace(html.select(['head'], base)!, head);
