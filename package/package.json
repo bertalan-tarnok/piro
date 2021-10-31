@@ -1,6 +1,6 @@
 {
   "name": "bit-page",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A tool for building static sites",
   "main": "dist/index.js",
   "scripts": {

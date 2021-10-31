@@ -44,28 +44,31 @@ export const parse = (cfg: Config, pathToPage: string) => {
     page = page.replace(im, '');
   }
 
-  let head = html.select(['head'], page);
-  if (!head) return page;
-
-  const riHeads = html.selectAll(['bit-head'], page);
-
-  for (const h of riHeads) {
-    head = html.append(head, html.getInside(h) || '');
-    page = page.replace(h, '');
-  }
-
-  page = page.replace(html.select(['head'], page)!, head);
-
   return page;
 };
 
 // `base` should already be parsed
 export const createPage = (cfg: Config, base: string, pathToPage: string) => {
   const body = html.select(['body'], base);
+  let head = html.select(['head'], base);
 
   if (!body) return null;
+  let page = parse(cfg, pathToPage);
+  const newBody = html.setInside(body, html.getInside(body) + page);
 
-  const page = parse(cfg, pathToPage);
-  const result = html.setInside(body, html.getInside(body) + page);
-  return base.replace(body, result);
+  base = base.replace(body, newBody);
+
+  if (!head) return base;
+
+  const bitHeads = html.selectAll(['bit-head'], base);
+
+  for (const h of bitHeads) {
+    head = html.append(head, html.getInside(h) || '');
+    base = base.replace(h, '');
+    console.log(h);
+  }
+
+  base = base.replace(html.select(['head'], base)!, head);
+
+  return base;
 };
