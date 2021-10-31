@@ -66,9 +66,13 @@ export const createPage = (cfg: Config, base: string, pathToPage: string) => {
 
   if (!head) return minify(base);
 
+  base = base.replace(head, html.setAttrs(head, { ...html.getAttrs(head), 'base-head': 'true' })!);
+
   const headParts = html.selectAll(['head'], base);
 
   for (const h of headParts) {
+    if ((html.getAttrs(h) || {})['base-head'] === 'true') continue;
+
     // remove the head tag
     base = base.replace(h, '');
 
