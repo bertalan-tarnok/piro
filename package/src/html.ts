@@ -13,7 +13,7 @@ const selfClosingTags = [
   'source',
   'track',
   'wbr',
-  // this is for riyko (not real html)
+  // this is for piro (not real html)
   'import',
 ];
 
@@ -34,6 +34,7 @@ const brain = {
 
       for (const r of result) {
         if (!r.match(re)) {
+          // removes item if the attrs don't match
           result = result.filter((item) => item !== r);
         }
       }
@@ -82,7 +83,7 @@ export const setAttrs = (tag: string, attrs: { [key: string]: string }) => {
   if (!start) return null;
 
   const end = start.match(/\/?>$/);
-  let newStart = start.replace(new RegExp(`${end}$`), '');
+  let newStart = start.replace(new RegExp(/(\s*[0-9-a-z]+="[^"]*"\s*)*\/?>$/), '');
 
   for (const a in attrs) {
     newStart += ` ${a}`;

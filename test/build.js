@@ -1,6 +1,6 @@
 const path = require('path');
-const { build } = require('bit-page');
-const html = require('bit-page/dist/html');
+const { build } = require('piro');
+const html = require('piro/dist/html');
 
 build({
   src: path.join(__dirname, 'src'),

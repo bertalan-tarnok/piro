@@ -1,6 +1,6 @@
 {
-  "name": "bit-page",
-  "version": "0.0.3",
+  "name": "piro",
+  "version": "0.0.0",
   "description": "A tool for building static sites",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bertalan-tarnok/bit-page"
+    "url": "https://github.com/bertalan-tarnok/piro"
   },
   "devDependencies": {
     "@types/node": "^16.9.1",

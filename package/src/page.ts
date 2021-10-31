@@ -26,7 +26,7 @@ export const parse = (cfg: Config, pathToPage: string) => {
 
     let file = fs.readFileSync(path.join(cfg.src, from)).toString();
 
-    file = html.setAttrs(file, { bit: name }) || file;
+    file = html.setAttrs(file, { ...html.getAttrs(file), part: name }) || file;
 
     for (const selectedComponent of html.selectAll([name], page)) {
       const cAttrs = html.getAttrs(selectedComponent);
@@ -35,16 +35,22 @@ export const parse = (cfg: Config, pathToPage: string) => {
       let newComponent = file;
 
       if (cInside) {
-        newComponent = html.setInside(newComponent, cInside);
+        newComponent = html.setInside(newComponent, html.getInside(newComponent) + cInside);
       }
 
-      page = page.replace(selectedComponent, html.setAttrs(newComponent, cAttrs || {}) || '');
+      const newAttrs = { ...html.getAttrs(newComponent), ...cAttrs };
+
+      page = page.replace(selectedComponent, html.setAttrs(newComponent, newAttrs) || '');
     }
 
     page = page.replace(im, '');
   }
 
   return page;
+};
+
+const minify = (s: string) => {
+  return s.replace(/((?<=>)\s+(?=\S))|((?<=\S)\s+(?=<))/g, '');
 };
 
 // `base` should already be parsed
@@ -58,16 +64,21 @@ export const createPage = (cfg: Config, base: string, pathToPage: string) => {
 
   base = base.replace(body, newBody);
 
-  if (!head) return base;
+  if (!head) return minify(base);
 
-  const bitHeads = html.selectAll(['bit-head'], base);
+  const headParts = html.selectAll(['head'], base);
 
-  for (const h of bitHeads) {
-    head = html.append(head, html.getInside(h) || '');
+  for (const h of headParts) {
+    // remove the head tag
     base = base.replace(h, '');
+
+    const inside = html.getInside(h);
+    if (!inside || head.includes(inside)) continue;
+
+    head = html.append(head, inside);
   }
 
   base = base.replace(html.select(['head'], base)!, head);
 
-  return base;
+  return minify(base);
 };
