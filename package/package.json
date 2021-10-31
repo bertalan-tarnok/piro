@@ -1,11 +1,10 @@
 {
   "name": "piro",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A tool for building static sites",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc",
-    "prepublishOnly": "npm version patch"
+    "dev": "tsc"
   },
   "author": "Bertalan Tarnok",
   "license": "MIT",
