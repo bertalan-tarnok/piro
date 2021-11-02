@@ -17,6 +17,9 @@ export const parse = (cfg: Config, pathToPage: string) => {
 
     const attrs = html.getAttrs(im);
 
+    // remove <import />
+    page = page.replace(im, '');
+
     if (!attrs) continue;
 
     const name = Object.keys(attrs)[0];
@@ -26,24 +29,36 @@ export const parse = (cfg: Config, pathToPage: string) => {
 
     let file = fs.readFileSync(path.join(cfg.src, from)).toString();
 
-    file = html.setAttrs(file, { ...html.getAttrs(file), part: name }) || file;
+    const exportTag = html.select(['export'], file);
+
+    if (!exportTag) continue;
+
+    let exportedHTML = html.getInside(exportTag)!;
+    const exportAttrs = html.getAttrs(exportTag);
+
+    exportedHTML = html.appendAttrs(exportedHTML, { part: name }) || exportedHTML;
 
     for (const selectedComponent of html.selectAll([name], page)) {
       const cAttrs = html.getAttrs(selectedComponent);
       const cInside = html.getInside(selectedComponent);
 
       let newComponent = file;
+      let newHTML = exportedHTML;
 
-      if (cInside) {
-        newComponent = html.setInside(newComponent, html.getInside(newComponent) + cInside);
+      for (const e in exportAttrs) {
+        let cAttr = (cAttrs || {})[e];
+
+        if (e === 'inside') {
+          cAttr = cInside || '';
+        }
+
+        newHTML = newHTML.replace(new RegExp(`{${e}}`, 'g'), cAttr || exportAttrs[e] || '');
       }
 
-      const newAttrs = { ...html.getAttrs(newComponent), ...cAttrs };
+      newComponent = newComponent.replace(exportTag, newHTML);
 
-      page = page.replace(selectedComponent, html.setAttrs(newComponent, newAttrs) || '');
+      page = page.replace(selectedComponent, newComponent);
     }
-
-    page = page.replace(im, '');
   }
 
   return page;
@@ -66,7 +81,7 @@ export const createPage = (cfg: Config, base: string, pathToPage: string) => {
 
   if (!head) return minify(base);
 
-  base = base.replace(head, html.setAttrs(head, { ...html.getAttrs(head), 'base-head': 'true' })!);
+  base = base.replace(head, html.appendAttrs(head, { 'base-head': 'true' })!);
 
   const headParts = html.selectAll(['head'], base);
 

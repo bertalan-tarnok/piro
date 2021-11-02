@@ -1,9 +1,12 @@
-<nav>
-  <head>
-    <link rel="stylesheet" href="nav.css" />
-  </head>
+<import btn from="lib/btn/btn.html" />
 
-  <import btn from="lib/btn/btn.html" />
-  <btn href="/">Home</btn>
-  <btn href="/about">About</btn>
-</nav>
+<head>
+  <link rel="stylesheet" href="nav.css" />
+</head>
+
+<export>
+  <nav>
+    <btn href="/" var="link">Home</btn>
+    <btn href="/about" var="link">About</btn>
+  </nav>
+</export>

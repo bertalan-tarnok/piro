@@ -68,7 +68,7 @@ export const getAttrs = (tag: string) => {
 
   const result: { [key: string]: string } = {};
 
-  for (const a of attrsRaw.trim().split(/\s+/)) {
+  for (const a of attrsRaw.trim().match(/[0-9-a-z]+(="[^"]*")?/g) || []) {
     const key = a.split('=')[0];
     const value = (a.split('=')[1] || '').replace(/"/g, '');
     result[key] = value;
@@ -96,6 +96,10 @@ export const setAttrs = (tag: string, attrs: { [key: string]: string }) => {
   newStart += end;
 
   return tag.replace(start, newStart);
+};
+
+export const appendAttrs = (tag: string, attrs: { [key: string]: string }) => {
+  return setAttrs(tag, { ...getAttrs(tag), ...attrs });
 };
 
 export const getInside = (tag: string) => {
