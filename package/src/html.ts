@@ -57,7 +57,7 @@ export const selectAll = (tag: selectQuery, from: string) => {
 };
 
 export const getAttrs = (tag: string) => {
-  const start = (tag.match(/<[a-z-0-9]+(\s[a-z-0-9]+(="[^"]*")?)*\s*\/?>/) || [null])[0];
+  const start = (tag.match(/<[a-z-0-9]+(\s+[a-z-0-9]+(="[^"]*")?)*\s*\/?>/) || [null])[0];
 
   if (!start) return null;
 
