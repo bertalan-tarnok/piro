@@ -17,7 +17,7 @@ const selfClosingTags = [
   'import',
 ];
 
-const open = (tagname: string) => `<${tagname}(\\s+[a-z-0-9]+(="[^"]*")?)*\\s*/?>`;
+const open = (tagname: string) => `<${tagname}(\\s+[\\w-]+(="[^"]*")?)*\\s*/?>`;
 
 type selectQuery = [string, { [key: string]: string }?];
 
@@ -57,18 +57,18 @@ export const selectAll = (tag: selectQuery, from: string) => {
 };
 
 export const getAttrs = (tag: string) => {
-  const start = (tag.match(/<[a-z-0-9]+(\s+[a-z-0-9]+(="[^"]*")?)*\s*\/?>/) || [null])[0];
+  const start = (tag.match(/<[\w-]+(\s+[\w-]+(="[^"]*")?)*\s*\/?>/) || [null])[0];
 
   if (!start) return null;
 
-  const attrsRe = /(?!(<[a-z-0-9]+))(\s+[a-z-0-9]+(="[^"]*")?)*(?=\s*\/?>)/;
+  const attrsRe = /(?!(<[\w-]+))(\s+[a\w-]+(="[^"]*")?)*(?=\s*\/?>)/;
   let attrsRaw = (start.match(attrsRe) || [null])[0];
 
   if (!attrsRaw) return null;
 
   const result: { [key: string]: string } = {};
 
-  for (const a of attrsRaw.trim().match(/[0-9-a-z]+(="[^"]*")?/g) || []) {
+  for (const a of attrsRaw.trim().match(/[\w-]+(="[^"]*")?/g) || []) {
     const key = a.split('=')[0];
     const value = (a.split('=')[1] || '').replace(/"/g, '');
     result[key] = value;
@@ -78,12 +78,12 @@ export const getAttrs = (tag: string) => {
 };
 
 export const setAttrs = (tag: string, attrs: { [key: string]: string }) => {
-  const start = (tag.match(/<[a-z-0-9]+(\s[a-z-0-9]+(="[^"]*")?)*\s*\/?>/) || [null])[0];
+  const start = (tag.match(/<[\w-]+(\s+[\w-]+(="[^"]*")?)*\s*\/?>/) || [null])[0];
 
   if (!start) return null;
 
   const end = start.match(/\/?>$/);
-  let newStart = start.replace(new RegExp(/(\s*[0-9-a-z]+="[^"]*"\s*)*\/?>$/), '');
+  let newStart = start.replace(new RegExp(/(\s*[\w-]+="[^"]*"\s*)*\/?>$/), '');
 
   for (const a in attrs) {
     newStart += ` ${a}`;

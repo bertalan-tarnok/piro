@@ -1,6 +1,6 @@
 {
   "name": "piro",
-  "version": "0.2.2",
+  "version": "0.2.5",
   "description": "A tool for building static sites",
   "main": "dist/index.js",
   "scripts": {
